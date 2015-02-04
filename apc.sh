@@ -24,19 +24,15 @@ while getopts ":n:t:p:a:" optname "$@"
   do
      case "$optname" in
        "n")
-         echo "n is $OPTARG"
          NAME=$OPTARG
          ;;
        "t")
-         echo "t is $OPTARG"
          TARGET=$OPTARG
          ;;
        "p")
-         echo "p is $OPTARG"
          PACKAGE=$OPTARG
          ;;
        "a")
-         echo "a is $OPTARG"
          ACTIVITY=$OPTARG
          ;;
        "?")
