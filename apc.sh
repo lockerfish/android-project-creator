@@ -377,6 +377,42 @@ $NAME is an awesome app.
 _EOF_
 }
 
+createSublimeProjectFile() {
+  cat << _EOF_ >$NAME.sublime-project
+{
+  "folders":
+  [
+    {
+      "path": "app",
+      "name": "Application",
+      "folder_exclude_patterns": ["build", "gradle*"],
+      "follow_symlinks": true
+    },
+    {
+      "path": "libs",
+      "name": "Libraries"
+    },
+    {
+      "path": "docs",
+      "name": "Documentation"
+    }
+  ],
+  "settings":
+  {
+    "tab_size": 4
+  },
+  "build_systems":
+  [
+    {
+      "name": "Android",
+      "cmd": ["./gradlew", "assembleDebug"],
+      "working_dir": "\${project_path:\${folder}}"
+    }
+  ]
+}
+_EOF_
+}
+
 echo "Android SDK directory is $SDK_DIR"
 
 if [ -n "$SDK_DIR" ]; then
@@ -392,6 +428,7 @@ if [ -n "$SDK_DIR" ]; then
   createSettingsGradleFile
   createLicenseFile
   createReadmeFile
+  createSublimeProjectFile
 
 fi
 
