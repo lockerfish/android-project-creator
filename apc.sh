@@ -53,7 +53,7 @@ while getopts ":n:t:p:a:" optname "$@"
 # used to setup the build system.
 # -------------------------------------------------------------------------------
 SDK_DIR=$ANDROID_HOME
-GRADLE_PLUGIN_VERSION=0.12+
+GRADLE_PLUGIN_VERSION=1.0.+
 
 createBuildGradleFile() {
   cat << _EOF_ >build.gradle
@@ -377,6 +377,28 @@ $NAME is an awesome app.
 _EOF_
 }
 
+createProguardRulesFile() {
+  cat << _EOF_ >app/proguard-rules.txt
+# Add project specific ProGuard rules here.
+# By default, the flags in this file are appended to flags specified
+# in android-sdk/tools/proguard/proguard-android.txt
+# You can edit the include path and order by changing the ProGuard
+# include property in project.properties.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# Add any project specific keep options here:
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+_EOF_
+}
+
 createSublimeProjectFile() {
   cat << _EOF_ >$NAME.sublime-project
 {
@@ -428,7 +450,20 @@ if [ -n "$SDK_DIR" ]; then
   createSettingsGradleFile
   createLicenseFile
   createReadmeFile
+  createProguardRulesFile
   createSublimeProjectFile
 
-fi
+  # Gradle Fix:
+  # Android Gradle wrapper is currently using an old version. 
+  # To support version 2.2.1, we need to update some wrapper files 
+  TMP_FILE=`mktemp /tmp/android.app.build.gradle.file`
+  sed -e 's/runProguard/minifyEnabled/' app/build.gradle > $TMP_FILE
+  mv $TMP_FILE app/build.gradle
 
+  TMP_FILE=`mktemp /tmp/android.gradle.wrapper.properties.file`
+  sed -e 's/gradle-.*-all.zip/gradle-2.2.1-all.zip/' gradle/wrapper/gradle-wrapper.properties > $TMP_FILE
+  mv $TMP_FILE gradle/wrapper/gradle-wrapper.properties
+  
+  #sed -i 's/runProguard/minifyEnabled/g' app/build.gradle
+  #sed -i 's/gradle-.*-all.zip/gradle-2.2.1-all.zip/g' gradle/wrapper/gradle-wrapper.properties
+fi
