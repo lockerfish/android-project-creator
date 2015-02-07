@@ -456,11 +456,11 @@ if [ -n "$SDK_DIR" ]; then
   # Gradle Fix:
   # Android Gradle wrapper is currently using an old version. 
   # To support version 2.2.1, we need to update some wrapper files 
-  TMP_FILE=`mktemp /tmp/android.app.build.gradle.file`
+  TMP_FILE=`mktemp /tmp/android.app.build.gradle.XXXXXXXXXX`
   sed -e 's/runProguard/minifyEnabled/' app/build.gradle > $TMP_FILE
   mv $TMP_FILE app/build.gradle
 
-  TMP_FILE=`mktemp /tmp/android.gradle.wrapper.properties.file`
+  TMP_FILE=`mktemp /tmp/android.gradle.wrapper.properties.XXXXXXXXXX`
   sed -e 's/gradle-.*-all.zip/gradle-2.2.1-all.zip/' gradle/wrapper/gradle-wrapper.properties > $TMP_FILE
   mv $TMP_FILE gradle/wrapper/gradle-wrapper.properties
   
