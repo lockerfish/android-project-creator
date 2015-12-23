@@ -4,8 +4,7 @@
 # Android Project Creator Script
 # @2015 Hendrix Tavarez 
 # -----------------------------------------------------------------------------
-#
-message()
+
 {
   TITLE="Cannot create Android project"
 
@@ -53,7 +52,7 @@ while getopts ":n:t:p:a:" optname "$@"
 # used to setup the build system.
 # -------------------------------------------------------------------------------
 SDK_DIR=$ANDROID_HOME
-GRADLE_PLUGIN_VERSION=1.0.+
+GRADLE_PLUGIN_VERSION=1.5.+
 
 createBuildGradleFile() {
   cat << _EOF_ >build.gradle
@@ -76,6 +75,10 @@ allprojects {
     repositories {
         jcenter()
     }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
 _EOF_
 
@@ -461,9 +464,9 @@ if [ -n "$SDK_DIR" ]; then
   mv $TMP_FILE app/build.gradle
 
   TMP_FILE=`mktemp /tmp/android.gradle.wrapper.properties.XXXXXXXXXX`
-  sed -e 's/gradle-.*-all.zip/gradle-2.2.1-all.zip/' gradle/wrapper/gradle-wrapper.properties > $TMP_FILE
+  sed -e 's/gradle-.*-all.zip/gradle-2.8-all.zip/' gradle/wrapper/gradle-wrapper.properties > $TMP_FILE
   mv $TMP_FILE gradle/wrapper/gradle-wrapper.properties
   
   #sed -i 's/runProguard/minifyEnabled/g' app/build.gradle
-  #sed -i 's/gradle-.*-all.zip/gradle-2.2.1-all.zip/g' gradle/wrapper/gradle-wrapper.properties
+  #sed -i 's/gradle-.*-all.zip/gradle-2.8-all.zip/g' gradle/wrapper/gradle-wrapper.properties
 fi
